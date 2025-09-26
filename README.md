@@ -1,134 +1,85 @@
-# Computer-Vision-AR-app
-Webcam Computer Vision Explorer
-This is a Python application that lets you explore a wide range of computer vision features interactively using your webcam. It's built with OpenCV and designed to be a hands-on learning tool.
+# Computer Vision App
 
-Features
-The application comes with multiple modes you can cycle through:
+This repository contains a single Python application (`app.py`) that demonstrates various computer vision concepts, including image manipulation, filtering, geometric transformations, camera calibration, and Augmented Reality.
 
-Normal Mode – A plain, unaltered webcam feed.
+### 1. Requirements and Setup
 
-Camera Calibration – Use a chessboard pattern to calibrate your webcam and save the parameters.
+Before running the application, you need to have Python and a few libraries installed.
 
-Augmented Reality – Project a 3D T-Rex model onto a printed ArUco marker. 🦖
+* **Python:** Ensure Python 3.6 or newer is installed.
 
-Color Space Conversion – Switch between RGB, Grayscale, and HSV color models.
+* **Libraries:** Install the required libraries using pip:
 
-Histogram Visualization – See the live distribution of pixel intensities for the R, G, and B channels.
 
-Brightness & Contrast – Adjust the brightness and contrast of the live feed.
+pip install opencv-python numpy
 
-Gaussian & Bilateral Blur – Apply and adjust different types of smoothing filters.
 
-Canny Edge Detection – View a real-time Canny edge detection filter.
+* **Files:** Place the following files in the same directory as `app.py`:
 
-Hough Line Detection – Detect and highlight straight lines in the video feed.
+* `A4_ArUco_Marker.png`
 
-Geometric Transformations – Interactively rotate, translate, and scale the video stream.
+* `A4_Chessboard_9x6.png`
 
-Panorama Mode – A framework to capture two images to be stitched together.
+* `trex_model.obj`
 
-Requirements
-Python 3.8+
+### 2. How to Run the App
 
-A working webcam.
+Simply run the main application file from your terminal:
 
-A terminal or command prompt (Windows, macOS, or Linux).
-
-Installation
-Download the Project Files
-Make sure you have all the project files (app.py, trex_model.obj, etc.) in a single folder on your computer.
-
-Open a Terminal in the Project Folder
-
-Windows: Navigate into the folder, hold Shift + Right Click on an empty space, and select Open PowerShell window here.
-
-macOS/Linux: Open your terminal and use the cd command to navigate to your project folder.
-
-cd path/to/your/project-folder
-
-Create a Virtual Environment (Recommended)
-This keeps the project's libraries separate from your system's Python.
-
-python -m venv venv
-
-Activate the environment:
-
-# On Windows
-.\venv\Scripts\activate
-
-# On macOS/Linux
-source venv/bin/activate
-
-You should see (venv) appear at the start of your terminal prompt.
-
-Install Required Libraries
-Install all the necessary packages using the provided requirements.txt file.
-
-pip install -r requirements.txt
-
-Run the Application
-You're all set! Run the main script to start the application.
 
 python app.py
 
-How to Use
-Printable Assets
-You need to print two files for the Calibration and AR modes to work:
 
-Calibration Chessboard → Print the A4_Chessboard_9x6.png file.
+A window named "Computer Vision App" will appear, showing your webcam feed. You can switch between different modes by pressing the keys listed below.
 
-ArUco Marker → Print the A4_ArUco_Marker.png file.
+### 3. Application Functions & Controls
 
-General Controls
-Key
+Use the following keyboard shortcuts to control the application's functions.
 
-Function
+* `ESC`: Exit the application.
 
-m
+* `s`: Save a snapshot of the current view.
 
-Cycle to the next mode
+**Core Image Functions**
 
-q
+* `c`: **Color Conversion**. Press `c` repeatedly to cycle between RGB (normal), Grayscale, and HSV color spaces. A live histogram is also displayed in this mode.
 
-Quit the application
+* `b`: **Brightness & Contrast**. Use trackbars to adjust the brightness and contrast of the image.
 
-Mode-Specific Controls
-CALIBRATE Mode
+* `g`: **Gaussian Filter**. Blurs the image using a Gaussian kernel. Use the "Kernel Size" trackbar to adjust the blur level.
 
-SPACE - Capture the current view of the chessboard.
+* `f`: **Bilateral Filter**. A non-linear filter that smooths the image while preserving edges. Use the trackbars to control its parameters.
 
-c - Perform calibration (requires at least 10 captures).
+* `e`: **Canny Edge Detection**. Detects edges in the image. Use the "Threshold1" and "Threshold2" trackbars to control the sensitivity.
 
-r - Reset and delete all captured images.
+* `h`: **Hough Transform**. Detects straight lines in the image using the Hough Transform algorithm. Adjust parameters with trackbars.
 
-COLOR_SPACE Mode
+**Geometric Transformations**
 
-c - Cycle between RGB, GRAY, and HSV.
+* `t`: **Image Translation, Rotation, & Scale**. Adjust the "tx", "ty", "angle", and "scale" trackbars to apply a 2D affine transformation to the image.
 
-BRIGHTNESS_CONTRAST Mode
+**Camera Calibration**
 
-w / s - Increase / Decrease Brightness.
+* `l`: **Calibrate the Camera**. Point your camera at a printed 9x6 chessboard pattern (like `A4_Chessboard_9x6.png`). When the board is detected, press `s` to save a frame. Once enough frames are collected, the script will compute and save the camera matrix and distortion coefficients to `calibration.npz`.
 
-e / d - Increase / Decrease Contrast.
+**Augmented Reality (AR)**
 
-GAUSSIAN Mode
+* `a`: **Augmented Reality Mode**. This mode requires a pre-calibrated camera and the `A4_ArUco_Marker.png` file. The application will detect the marker and project a 3D TREX model (from `trex_model.obj`) onto it. The model's size has been increased for better visibility.
 
-g / h - Increase / Decrease Gaussian kernel size.
+  * **Note:** The `.obj` file is parsed using a custom-written function.
 
-BILATERAL Mode
+**Panorama**
 
-b / n - Increase / Decrease Bilateral filter diameter.
+* `p`: **Panorama Mode**. This is a placeholder function for the panorama feature. To use this, take multiple images of a scene by pressing `s` as you pan your camera. You would then need to write a separate script to load these images and perform image stitching.
 
-TRANSFORM Mode
+### 4. Custom Functions
 
-w/a/s/d - Translate the image Up/Left/Down/Right.
+This application uses custom functions for the following tasks, as requested in the assignment:
 
-, / . - Rotate the image Left / Right.
+* **OBJ File Parsing**: A class `ObjectLoader` is implemented to manually read the `trex_model.obj` file and extract the vertex and face data.
 
-z / x - Scale the image Up / Down.
+* **Camera Calibration**: The calibration process is implemented from scratch, using `findChessboardCorners` and `calibrateCamera` to compute the camera matrix and distortion coefficients.
 
-PANORAMA Mode
+* **Hough Transform**: The line detection is performed using the `HoughLines` function.
 
-c - Capture an image (capture two to trigger stitching).
-
-r - Reset the captured images.
+* **Image Transformations**: The geometric transformations are applied using a custom-built affine transformation matrix.
